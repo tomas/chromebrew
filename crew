@@ -785,7 +785,8 @@ def remove (pkgName)
         begin
           puts "Removing file " + line.chomp + "".lightred if @opt_verbose
           File.unlink File.join(CREW_PREFIX, line.chomp)
-        rescue => exception #swallow exception
+        rescue => ex #swallow exception
+          puts ex.message.lightred
         end
       end
 
