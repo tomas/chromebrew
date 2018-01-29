@@ -5,7 +5,7 @@ CREW_VERSION = '0.4.3'
 ARCH = `uname -m`.strip
 ARCH_LIB = if ARCH == 'x86_64' then 'lib64' else 'lib' end
 
-CREW_PREFIX = '/usr/local'
+CREW_PREFIX = ENV['CREW_PREFIX'] || '/usr/local/crew'
 CREW_LIB_PREFIX = CREW_PREFIX + '/' + ARCH_LIB
 
 CREW_LIB_PATH = CREW_PREFIX + '/lib/crew/'
