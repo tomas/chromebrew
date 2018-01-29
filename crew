@@ -542,9 +542,11 @@ def install_package (pkgdir)
     strip_find_files "find . -type f ! -iname '*\.bz2' ! -iname '*\.gz' ! -iname '*\.lha' ! -iname '*\.rar' ! -iname '*\.tar' ! -iname '*\.tgz' ! -iname '*\.xz' ! -iname '*\.zip' -perm /111 -print | sed -e '/lib.*\.a$/d' -e '/lib.*\.so/d'"
 
     if @opt_verbose then
-      system "tar cvf - ./usr/* | (cd /; tar xp --keep-directory-symlink -f -)"
+      # system "tar cvf - ./usr/* | (cd /; tar xp --keep-directory-symlink -f -)"
+      system "cp -avr ./usr/local/* #{CREW_PREFIX}"
     else
-      system "tar cf - ./usr/* | (cd /; tar xp --keep-directory-symlink -f -)"
+      # system "tar cf - ./usr/* | (cd /; tar xp --keep-directory-symlink -f -)"
+      system "cp -ar ./usr/local/* #{CREW_PREFIX}"
     end
   end
 end
