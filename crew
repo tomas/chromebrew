@@ -232,7 +232,7 @@ end
 def files (pkgName)
   filelist = "#{CREW_PREFIX}/etc/crew/meta/#{pkgName}.filelist"
   if File.exists? "#{filelist}"
-    system "sort #{filelist} | sed -e 's;^$;#{CREW_PREFIX};g"
+    system "sort #{filelist} | sed -e 's;^$;#{CREW_PREFIX}\/;g"
     lines = `wc -l "#{filelist}"`.strip.split(' ')[0].to_i
     size = `du -ch $(cat #{filelist}) | tail -1 | cut -f 1`
     puts "Total found: #{lines}".lightgreen
@@ -504,11 +504,11 @@ def prepare_package (destdir)
     # create directory list
     system "find . -type f > ../filelist"
     system "find . -type l >> ../filelist"
-    system "cut -c2- ../filelist | sed -e 's;/usr/local;;g' > filelist"
+    system "cut -c2- ../filelist | sed -e 's;/usr/local/;;g' > filelist"
 
     # create file list
     system "find . -type d > ../dlist"
-    system "cut -c2- ../dlist | sed -e 's;/usr/local;;g' > dlistcut"
+    system "cut -c2- ../dlist | sed -e 's;/usr/local/;;g' > dlistcut"
     system "tail -n +2 dlistcut > dlist"
 
     # remove temporary files
@@ -534,8 +534,8 @@ def install_package (pkgdir)
     # FileUtils.mv 'dlist', CREW_CONFIG_PATH + "meta/#{@pkg.name}.directorylist"
     # FileUtils.mv 'filelist', CREW_CONFIG_PATH + "meta/#{@pkg.name}.filelist"
     # strip '/usr/local' from paths in file lists 
-    system "cat dlist | sed -e 's;/usr/local;;g' > #{CREW_CONFIG_PATH}/meta/#{@pkg.name}.directorylist"
-    system "cat filelist | sed -e 's;/usr/local;;g' > #{CREW_CONFIG_PATH}/meta/#{@pkg.name}.filelist"
+    system "cat dlist | sed -e 's;/usr/local/;;g' > #{CREW_CONFIG_PATH}/meta/#{@pkg.name}.directorylist"
+    system "cat filelist | sed -e 's;/usr/local/;;g' > #{CREW_CONFIG_PATH}/meta/#{@pkg.name}.filelist"
     
     # Strip libraries with -S
     strip_find_files "find . -type f -name 'lib*.a' -print", "-S"
