@@ -504,11 +504,11 @@ def prepare_package (destdir)
     # create directory list
     system "find . -type f > ../filelist"
     system "find . -type l >> ../filelist"
-    system "cut -c2- ../filelist > filelist"
+    system "cut -c2- ../filelist | sed -e 's;/usr/local;#{CREW_PREFIX};g' > filelist"
 
     # create file list
     system "find . -type d > ../dlist"
-    system "cut -c2- ../dlist > dlistcut"
+    system "cut -c2- ../dlist | sed -e 's;/usr/local;#{CREW_PREFIX};g' > dlistcut"
     system "tail -n +2 dlistcut > dlist"
 
     # remove temporary files
@@ -531,9 +531,12 @@ end
 
 def install_package (pkgdir)
   Dir.chdir pkgdir do
-    FileUtils.mv 'dlist', CREW_CONFIG_PATH + "meta/#{@pkg.name}.directorylist"
-    FileUtils.mv 'filelist', CREW_CONFIG_PATH + "meta/#{@pkg.name}.filelist"
-
+    # FileUtils.mv 'dlist', CREW_CONFIG_PATH + "meta/#{@pkg.name}.directorylist"
+    # FileUtils.mv 'filelist', CREW_CONFIG_PATH + "meta/#{@pkg.name}.filelist"
+    # replace original '/usr/local' path with actual CREW_PREFIX path
+    system "cat dlist | sed -e 's;/usr/local;#{CREW_PREFIX};g' > #{CREW_CONFIG_PATH}/meta/#{@pkg.name}.directorylist"
+    system "cat filelist | sed -e 's;/usr/local;#{CREW_PREFIX};g' > #{CREW_CONFIG_PATH}/meta/#{@pkg.name}.filelist"
+    
     # Strip libraries with -S
     strip_find_files "find . -type f -name 'lib*.a' -print", "-S"
     strip_find_files "find . -type f -name 'lib*.so*' -print", "-S"
