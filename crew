@@ -24,6 +24,7 @@ Usage:
   crew download [-v|--verbose] <name> ...
   crew files <name> ...
   crew help [<command>]
+  crew list [-s|--sorted]
   crew install [-k|--keep] [-s|--build-from-source] [-v|--verbose] <name> ...
   crew list (available|installed)
   crew remove [-v|--verbose] <name> ...
@@ -135,6 +136,14 @@ def list_installed
         puts File.basename filename, '.rb' if File.extname(filename) == '.rb'
       end
     end
+  end
+end
+
+def list_installed_packages(sorted = false)
+  list = @device[:installed_packages]
+  list = list.sort { |a,b| a[:name] <=> b[:name] } if sorted
+  list.each do |elem|
+    print("#{elem[:name]}\n")
   end
 end
 
@@ -865,7 +874,9 @@ def install_command (args)
 end
 
 def list_command (args)
-  if args['available']
+  if args['--sorted']
+    list_installed_packages(true)
+  elsif args['available']
     list_available
   elsif args['installed']
     list_installed
