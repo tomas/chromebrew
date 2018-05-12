@@ -24,9 +24,8 @@ Usage:
   crew download [-v|--verbose] <name> ...
   crew files <name> ...
   crew help [<command>]
-  crew list [-s|--sorted]
+  crew list [-s|--sorted] [-a|--available]
   crew install [-k|--keep] [-s|--build-from-source] [-v|--verbose] <name> ...
-  crew list (available|installed)
   crew remove [-v|--verbose] <name> ...
   crew search [-v|--verbose] [<name> ...]
   crew update
@@ -125,17 +124,6 @@ def list_available
       @notInstalled = nil if packageList == CREW_CONFIG_PATH + 'meta/' + packageName + '.filelist'
     end
     puts File.basename filename, '.rb' if File.extname(filename) == '.rb' if @notInstalled
-  end
-end
-
-def list_installed
-  Find.find (CREW_LIB_PATH + 'packages') do |filename|
-    Find.find(CREW_CONFIG_PATH + 'meta/') do |packageList|
-      packageName = File.basename filename, '.rb'
-      if packageList == CREW_CONFIG_PATH + 'meta/' + packageName + '.filelist'
-        puts File.basename filename, '.rb' if File.extname(filename) == '.rb'
-      end
-    end
   end
 end
 
@@ -874,12 +862,11 @@ def install_command (args)
 end
 
 def list_command (args)
-  if args['--sorted']
-    list_installed_packages(true)
-  elsif args['available']
+  if args['--available'] || args['--a']
     list_available
-  elsif args['installed']
-    list_installed
+  else
+    sorted = args['--sorted'] || args['--s']
+    list_installed_packages(sorted)
   end
 end
 
