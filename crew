@@ -268,6 +268,9 @@ end
 def update
   abort "`crew update` is used to update crew itself. Use `crew upgrade <package1> [<package2> ...]` to update specific packages.".orange if @pkgName
 
+  current_branch = `git branch | grep '^*'`
+  abort "Not in master branch. Refusing to update" unless current_branch == "* master\n" 
+
   #update package lists
   Dir.chdir CREW_LIB_PATH do
     system "git fetch origin master"
