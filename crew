@@ -862,10 +862,10 @@ def install_command (args)
 end
 
 def list_command (args)
-  if args['--available'] || args['--a']
+  if args['--available'] || args['-a']
     list_available
   else
-    sorted = args['--sorted'] || args['--s']
+    sorted = args['--sorted'] || args['-s']
     list_installed_packages(sorted)
   end
 end
